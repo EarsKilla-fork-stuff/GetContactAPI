@@ -9,6 +9,16 @@ namespace GetContactAPI.Models
         /// </summary>
         [JsonProperty("profile")]
         public Profile Profile { get; protected set; }
+        
+        [JsonProperty("badge")]
+        public string Badge { get; protected set; }
+        
+        [JsonProperty("deletedTagCount")]
+        public int? DeletedTagCount { get; protected set; }
+        
+        [JsonProperty("newTagCount")]
+        public int? NewTagCount { get; protected set; }
+        
         /// <summary>
         /// Информация о подписке
         /// </summary>
