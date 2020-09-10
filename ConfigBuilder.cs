@@ -37,6 +37,11 @@ namespace GetContactAPI
             /// </summary>
             public string DeviceId { get; internal set; } = "14130e29cebe9c39";
 
+            /// <summary>
+            /// User-Agent посылаемый приложением с устройства
+            /// </summary>
+            public string UserAgent { get; internal set; } = "Dalvik/2.1.0 (Linux; U; Android 5.0; NULL Build/NRD90M)";
+
             internal Config(string token, string aesKey)
             {
                 Token = token;
@@ -78,6 +83,13 @@ namespace GetContactAPI
         /// <param name="value">Значение</param>
         public ConfigBuilder WithDeviceId(string value)
             => SetProperty(c => c.DeviceId = value);
+
+        /// <summary>
+        /// Заменить UserAgent посылаемый приложением
+        /// </summary>
+        /// <param name="value">Значение</param>
+        public ConfigBuilder WithUserAgent(string value)
+            => SetProperty(c => c.UserAgent = value);
 
         private ConfigBuilder SetProperty(Action<Config> fn)
         {

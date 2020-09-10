@@ -58,6 +58,7 @@ namespace GetContactAPI
                     {"X-Req-Signature", sig},
                     {"X-Encrypted", "1"}
                 });
+                client.Headers.Add(HttpRequestHeader.UserAgent, _config.UserAgent);
 
                 string rawJsonResponse;
                 try
