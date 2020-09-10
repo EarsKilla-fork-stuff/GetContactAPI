@@ -9,11 +9,11 @@ namespace GetContactAPI
 {
     public class API
     {
-        private readonly Topic topic;
+        private readonly Topic _topic;
 
-        public API(Data data)
+        public API(ConfigBuilder.Config config)
         {
-            this.topic = new Topic(data);
+            _topic = new Topic(config);
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace GetContactAPI
         public ApiResponse<SearchResult> GetByPhone(string phone, string countryCode = null)
         {
             if (String.IsNullOrEmpty(phone) || !Regex.IsMatch(phone, "\\+?\\d{11}")) throw new ArgumentException("Телефон заполнен неправильно");
-            return topic.CreateTopic<SearchResult>("https://pbssrv-centralevents.com/v2.5/search", "search", phone, countryCode);
+            return _topic.CreateTopic<SearchResult>("https://pbssrv-centralevents.com/v2.5/search", "search", phone, countryCode);
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace GetContactAPI
         public ApiResponse<DetailsResult> GetTags(string phone, string countryCode = null)
         {
             if (String.IsNullOrEmpty(phone) || !Regex.IsMatch(phone, "\\+?\\d{11}")) throw new ArgumentException("Телефон заполнен неправильно");
-            return topic.CreateTopic<DetailsResult>("https://pbssrv-centralevents.com/v2.5/number-detail", "details", phone, countryCode);
+            return _topic.CreateTopic<DetailsResult>("https://pbssrv-centralevents.com/v2.5/number-detail", "details", phone, countryCode);
         }
     }
 }

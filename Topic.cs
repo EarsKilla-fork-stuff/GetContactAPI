@@ -11,11 +11,11 @@ namespace GetContactAPI
 {
     internal class Topic
     {
-        private readonly Data aData;
+        private readonly ConfigBuilder.Config _config;
 
-        public Topic(Data data)
+        public Topic(ConfigBuilder.Config config)
         {
-            aData = data;
+            _config = config;
         }
 
         /// <summary>
@@ -29,12 +29,12 @@ namespace GetContactAPI
             {
                 countryCode = countryCode ?? "RU",
                 source,
-                token = aData.Token,
+                token = _config.Token,
                 phoneNumber = phone
             };
             string req = JsonConvert.SerializeObject(reqObj, Formatting.None);
-            string sig = Crypt.EncryptToSHA256(ts.Replace("\r\n", "") + "-" + req, aData.Key); // signature
-            string crypt = Crypt.EncryptAes256ECB(req, aData.AesKey);
+            string sig = Crypt.EncryptToSHA256(ts.Replace("\r\n", "") + "-" + req, _config.Key); // signature
+            string crypt = Crypt.EncryptAes256ECB(req, _config.AesKey);
 
             return SendPost<T>(url, "{\"data\":\"" + crypt + "\"}", ts, sig);
         }
@@ -48,10 +48,10 @@ namespace GetContactAPI
             {
                 client.Headers.Add(new NameValueCollection()
                 {
-                    {"X-App-Version", "4.9.1"},
-                    {"X-Token", aData.Token},
-                    {"X-Os", "android 5.0"},
-                    {"X-Client-Device-Id", "14130e29cebe9c39"},
+                    {"X-App-Version", _config.AppVersion},
+                    {"X-Token", _config.Token},
+                    {"X-Os", _config.Os},
+                    {"X-Client-Device-Id", _config.DeviceId},
                     {"Content-Type", "application/json; charset=utf-8"},
                     {"Accept-Encoding", "deflate"},
                     {"X-Req-Timestamp", ts},
@@ -81,7 +81,7 @@ namespace GetContactAPI
                 if (!rawResponse.TryGetValue("data", StringComparison.Ordinal, out var rawData))
                     throw new ApplicationException("Failed to get \"data\" from response!");
 
-                var decryptedResponse = Crypt.DecryptAes256ECB(rawData.ToString(), aData.AesKey); // расшифровывем
+                var decryptedResponse = Crypt.DecryptAes256ECB(rawData.ToString(), _config.AesKey); // расшифровывем
                 return JsonConvert.DeserializeObject<ApiResponse<T>>(decryptedResponse);
             }
         }
